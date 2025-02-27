@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}登录{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+<style>
+    .auth-page {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                    url("{{ url_for('static', filename='images/背景图.jpg') }}") no-repeat center center;
+        background-size: cover;
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-image {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 30px;
+        border-radius: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <!-- 左侧图片 -->
+            <div class="col-md-6 d-none d-md-block">
+                <div class="auth-image">
+                    <img src="{{ url_for('static', filename='images/auth-illustration.png') }}" 
+                         alt="Library" class="img-fluid">
+                    <h3 class="text-white text-center mt-4">探索知识的海洋</h3>
+                    <p class="text-white text-center">在这里，与无数精彩的故事相遇</p>
+                </div>
+            </div>
+            <!-- 右侧登录表单 -->
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card">
+                    <div class="card-header">
+                        <h2 class="auth-title">欢迎回来</h2>
+                        <p class="auth-subtitle">登录您的账号以继续</p>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control" name="username" 
+                                           placeholder="用户名" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                    <input type="password" class="form-control" name="password" 
+                                           placeholder="密码" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-auth btn-block">
+                                    登录
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="auth-footer">
+                        <p class="mb-0">
+                            还没有账号？
+                            <a href="{{ url_for('auth.register') }}">立即注册</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,87 @@
+/* 基础样式 */
+:root {
+    --primary-color: #1e3c72;
+    --secondary-color: #2a5298;
+    --text-color: #333;
+    --light-text: #6c757d;
+    --border-radius: 15px;
+}
+
+body {
+    font-family: 'Noto Sans SC', sans-serif;
+    color: var(--text-color);
+    background-image: url('../images/library-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;  /* 固定背景，防止滚动 */
+    min-height: 100vh;
+}
+
+/* 添加一个半透明的遮罩层让内容更容易阅读 */
+.main-content {
+    background-color: rgba(248, 249, 250, 0.9);
+    min-height: calc(100vh - 60px);  /* 减去导航栏高度 */
+    padding: 2rem 0;
+}
+
+/* 导航栏样式 */
+.navbar {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.nav-link {
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-1px);
+}
+
+.form-control {
+    border-radius: 20px 0 0 20px;
+    border: none;
+}
+
+.input-group .btn {
+    border-radius: 0 20px 20px 0;
+    border: none;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.btn-outline-light {
+    border-width: 2px;
+}
+
+.btn-outline-light:hover {
+    transform: translateY(-1px);
+}
+
+/* 通用组件样式 */
+.card {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+} 

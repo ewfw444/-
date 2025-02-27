@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block title %}图书管理{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-books mr-2"></i>图书管理</h1>
+        <p class="lead">添加和管理图书馆藏书籍</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-plus mr-2"></i>添加新书</h4>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><i class="fas fa-book mr-2"></i>书名</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><i class="fas fa-user mr-2"></i>作者</label>
+                        <input type="text" class="form-control" id="author" name="author" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label><i class="fas fa-barcode mr-2"></i>ISBN</label>
+                        <input type="text" class="form-control" id="isbn" name="isbn" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label><i class="fas fa-layer-group mr-2"></i>数量</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tags mr-2"></i>分类</label>
+                    <select class="form-control" id="category" name="category" required>
+                        <option value="literature">文学小说</option>
+                        <option value="technology">科技教育</option>
+                        <option value="humanities">人文社科</option>
+                        <option value="art">艺术设计</option>
+                        <option value="life">生活休闲</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus mr-1"></i>添加图书
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-list mr-2"></i>图书列表</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>书名</th>
+                            <th>作者</th>
+                            <th>ISBN</th>
+                            <th>分类</th>
+                            <th>可借/总数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for book in books %}
+                        <tr>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.isbn }}</td>
+                            <td>
+                                <span class="badge badge-info">
+                                    {% if book.category == 'literature' %}文学小说
+                                    {% elif book.category == 'technology' %}科技教育
+                                    {% elif book.category == 'humanities' %}人文社科
+                                    {% elif book.category == 'art' %}艺术设计
+                                    {% elif book.category == 'life' %}生活休闲
+                                    {% else %}未分类
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-{{ 'success' if book.available > 0 else 'danger' }}">
+                                    {{ book.available }}/{{ book.quantity }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_book', book_id=book.id) }}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-sm btn-danger delete-book" data-id="{{ book.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">暂无图书</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">确认删除</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                确定要删除这本图书吗？此操作不可恢复。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let bookIdToDelete = null;
+
+$('.delete-book').click(function() {
+    bookIdToDelete = $(this).data('id');
+    $('#deleteModal').modal('show');
+});
+
+$('#confirmDelete').click(function() {
+    if (bookIdToDelete) {
+        $.ajax({
+            url: `/admin/books/${bookIdToDelete}/delete`,
+            method: 'POST',
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message || '删除失败');
+                }
+            },
+            error: function() {
+                alert('操作失败，请重试');
+            }
+        });
+    }
+    $('#deleteModal').modal('hide');
+});
+</script>
+{% endblock %} 

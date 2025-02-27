@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}首页{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- 英雄区域 -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="hero-title">探索知识的海洋</h1>
+                <p class="lead mb-5">在这里，与无数精彩的故事相遇</p>
+                <div class="search-box">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" placeholder="搜索您感兴趣的图书...">
+                        <div class="input-group-append">
+                            <button class="btn btn-light px-4">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-waves">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 24 150 28" preserveAspectRatio="none">
+            <defs>
+                <path id="wave-path" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+            </defs>
+            <g class="wave1">
+                <use href="#wave-path" x="50" y="3" fill="rgba(255,255,255, .1)"></use>
+            </g>
+            <g class="wave2">
+                <use href="#wave-path" x="50" y="0" fill="rgba(255,255,255, .2)"></use>
+            </g>
+            <g class="wave3">
+                <use href="#wave-path" x="50" y="9" fill="#fff"></use>
+            </g>
+        </svg>
+    </div>
+</section>
+
+<div class="container mt-n5">
+    <!-- 统计卡片 -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="{{ url_for('static', filename='images/1.jpg') }}
+                    " alt="Books" width="48">
+                </div>
+                <h3 class="mt-3">{{ books|length }}</h3>
+                <p class="text-muted">馆藏图书</p>
+                <div class="stat-wave"></div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="{{ url_for('static', filename='images/icons/user.png') }}" alt="Users" width="48">
+                </div>
+                <h3 class="mt-3">100+</h3>
+                <p class="text-muted">注册用户</p>
+                <div class="stat-wave"></div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <img src="{{ url_for('static', filename='images/icons/borrow.png') }}" alt="Borrows" width="48">
+                </div>
+                <h3 class="mt-3">50+</h3>
+                <p class="text-muted">今日借阅</p>
+                <div class="stat-wave"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分类筛选 -->
+    <div class="filter-section">
+        <h5 class="mb-3">图书分类</h5>
+        <div class="category-pills">
+            {% for category in categories %}
+            <a href="{{ url_for('book.category', category=category.id) }}" 
+               class="category-pill {{ 'active' if current_category == category.id }}">
+                <i class="fas {{ category.icon }} mr-2"></i>{{ category.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 新增的静态书籍图片展示栏目 -->
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">推荐书籍</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="{{ url_for('static', filename='images/covers/安娜卡列尼娜.jpg') }}" alt="书籍1" class="img-fluid">
+                    </div>
+                    <div class="book-info text-center">
+                        <h5 class="book-title">安妮卡列尼娜</h5>
+                        <p class="book-author">列夫托尔斯泰</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="{{ url_for('static', filename='images/covers/战争与和平.jpg') }}" alt="书籍2" class="img-fluid">
+                    </div>
+                    <div class="book-info text-center">
+                        <h5 class="book-title">战争与和平</h5>
+                        <p class="book-author">列夫托尔斯泰</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="book-card">
+                    <div class="book-cover">
+                        <img src="{{ url_for('static', filename='images/covers/百年孤独.jpg') }}" alt="书籍3" class="img-fluid">
+                    </div>
+                    <div class="book-info text-center">
+                        <h5 class="book-title">百年孤独</h5>
+                        <p class="book-author">加西亚马尔克斯</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图书列表 -->
+    <div class="row book-grid">
+        {% for book in books %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="book-card">
+                <div class="book-cover">
+                    <img src="{{ url_for('static', filename='images/covers/' + book.isbn + '.jpg') }}" 
+                         onerror="this.onerror=null; this.src='{{ url_for('static', filename='images/covers/default.jpg') }}';"
+                         class="lazy"
+                         alt="{{ book.title }}">
+                    <div class="book-status {{ 'bg-success' if book.available > 0 else 'bg-danger' }} text-white">
+                        {{ '可借阅' if book.available > 0 else '已借完' }}
+                    </div>
+                    <div class="book-overlay">
+                        <div class="book-actions">
+                            {% if book.available > 0 and current_user not in book.borrowers %}
+                            <a href="{{ url_for('book.borrow_book', book_id=book.id) }}" 
+                               class="btn btn-light btn-lg">
+                               <i class="fas fa-hand-holding mr-2"></i>借阅
+                            </a>
+                            {% elif current_user in book.borrowers %}
+                            <a href="{{ url_for('book.return_book', book_id=book.id) }}" 
+                               class="btn btn-warning btn-lg">
+                               <i class="fas fa-undo mr-2"></i>归还
+                            </a>
+                            {% else %}
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                <i class="fas fa-times mr-2"></i>暂不可借
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="book-info">
+                    <h5 class="book-title">{{ book.title }}</h5>
+                    <p class="book-author mb-2">{{ book.author }}</p>
+                    <div class="book-meta">
+                        <span><i class="fas fa-book mr-1"></i>{{ book.available }}/{{ book.quantity }}</span>
+                        <span><i class="fas fa-barcode mr-1"></i>{{ book.isbn }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="empty-state">
+                <img src="{{ url_for('static', filename='images/empty-state.svg') }}" 
+                     alt="No books" class="mb-4" width="200">
+                <h3 class="text-muted">暂无图书</h3>
+                <p class="text-muted">当前没有可用的图书，请稍后再来查看</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- 分页 -->
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ 'disabled' if not pagination.has_prev }}">
+                <a class="page-link" href="{{ url_for('book.index', page=pagination.prev_num) }}">上一页</a>
+            </li>
+            {% for page in pagination.iter_pages() %}
+                {% if page %}
+                    <li class="page-item {{ 'active' if page == pagination.page }}">
+                        <a class="page-link" href="{{ url_for('book.index', page=page) }}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            <li class="page-item {{ 'disabled' if not pagination.has_next }}">
+                <a class="page-link" href="{{ url_for('book.index', page=pagination.next_num) }}">下一页</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %} 

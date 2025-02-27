@@ -1,0 +1,157 @@
+/* 英雄区域样式 */
+.hero-section {
+    background: linear-gradient(rgba(30, 60, 114, 0.9), rgba(42, 82, 152, 0.9)), 
+                url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 8rem 0 10rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 波浪动画 */
+.hero-waves {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+}
+
+.waves {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.wave1 use {
+    animation: wave-anim 8s linear infinite;
+}
+
+.wave2 use {
+    animation: wave-anim 10s linear infinite;
+}
+
+.wave3 use {
+    animation: wave-anim 12s linear infinite;
+}
+
+@keyframes wave-anim {
+    0% {
+        transform: translate3d(-90px, 0, 0);
+    }
+    100% {
+        transform: translate3d(85px, 0, 0);
+    }
+}
+
+/* 统计卡片样式 */
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* 图书卡片样式 */
+.book-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.book-cover {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.book-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.book-card:hover .book-overlay {
+    opacity: 1;
+}
+
+.book-card:hover .book-cover img {
+    transform: scale(1.05);
+}
+
+/* 分类标签样式 */
+.category-pill {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    background: #f8f9fa;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    text-decoration: none !important;
+    display: inline-block;
+}
+
+.category-pill:hover,
+.category-pill.active {
+    background: var(--primary-color);
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(30, 60, 114, 0.2);
+}
+
+/* 分页样式 */
+.pagination .page-link {
+    border-radius: 20px;
+    margin: 0 5px;
+    border: none;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.pagination .page-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 10px rgba(30, 60, 114, 0.2);
+} 

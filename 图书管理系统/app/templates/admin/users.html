@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}用户管理{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container">
+        <h1><i class="fas fa-users mr-2"></i>用户管理</h1>
+        <p class="lead">管理系统用户账号</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-list mr-2"></i>用户列表</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名</th>
+                            <th>邮箱</th>
+                            <th>角色</th>
+                            <th>借阅数量</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <span class="badge badge-{{ 'primary' if user.is_admin else 'secondary' }}">
+                                    {{ '管理员' if user.is_admin else '普通用户' }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">
+                                    {{ user.borrowed_books.count() }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if not user.is_admin %}
+                                <button class="btn btn-sm btn-warning toggle-admin" data-id="{{ user.id }}" 
+                                        data-admin="{{ '1' if user.is_admin else '0' }}">
+                                    <i class="fas fa-user-shield"></i>
+                                    {{ '取消管理员' if user.is_admin else '设为管理员' }}
+                                </button>
+                                <button class="btn btn-sm btn-danger delete-user" data-id="{{ user.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">暂无用户</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 删除确认模态框 -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">确认删除</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                确定要删除这个用户吗？此操作不可恢复。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let userIdToDelete = null;
+
+$('.delete-user').click(function() {
+    userIdToDelete = $(this).data('id');
+    $('#deleteModal').modal('show');
+});
+
+$('#confirmDelete').click(function() {
+    if (userIdToDelete) {
+        $.ajax({
+            url: `/admin/users/${userIdToDelete}/delete`,
+            method: 'POST',
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message || '删除失败');
+                }
+            },
+            error: function() {
+                alert('操作失败，请重试');
+            }
+        });
+    }
+    $('#deleteModal').modal('hide');
+});
+
+$('.toggle-admin').click(function() {
+    const userId = $(this).data('id');
+    const isAdmin = $(this).data('admin') === '1';
+    
+    $.ajax({
+        url: `/admin/users/${userId}/toggle-admin`,
+        method: 'POST',
+        success: function(response) {
+            if (response.success) {
+                location.reload();
+            } else {
+                alert(response.message || '操作失败');
+            }
+        },
+        error: function() {
+            alert('操作失败，请重试');
+        }
+    });
+});
+</script>
+{% endblock %} 

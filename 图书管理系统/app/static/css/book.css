@@ -1,0 +1,14 @@
+/* 图书相关样式 */
+.book-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.book-cover {
+    position: relative;
+    height: 300px;
+}
+
+/* 其他图书相关样式... */ 
